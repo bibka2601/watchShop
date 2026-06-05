@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "984277649309",
+    "project_id": "wathesapp-fc191",
+    "storage_bucket": "wathesapp-fc191.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:984277649309:android:23fd3f9209d4113f8e9174",
+        "android_client_info": {
+          "package_name": "com.example.smart_watches_shop"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBgbaQPvbvjZAnH0UGZ0vAKyIb9UNlilB8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:smart_watches_shop/core/constants/app_colors.dart';
 import 'package:smart_watches_shop/core/constants/app_images.dart';
+import 'package:smart_watches_shop/models/cart_provider.dart';
+import 'package:smart_watches_shop/models/watch_models.dart';
 
 class Screen4 extends StatefulWidget {
   const Screen4({super.key});
@@ -11,39 +14,37 @@ class Screen4 extends StatefulWidget {
 
 class _Screen4State extends State<Screen4> {
   int _valueColor = 0;
+  bool _isFavorite = false;
 
-  final List<String> changeColor = [
-    'Red',
-    'Black',
-    'White',
-  ];
+  final List<String> changeColor = ['Red', 'Black', 'White'];
 
-  bool chaneIconColor = false;
+  /// Данные этих часов — берём из нашей модели
+  static const _watch = WatchModel(
+    id: 'apple_watch_1',
+    image: AppImages.watch2,
+    containerBgColor: AppColors.thirdColor,
+    watchModel: 'Apple Watch Se NewGen',
+    watchCompany: 'Apple',
+    price: 349.99,
+  );
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back, 
-            size: 30,
-          ),
+          onPressed: () => Navigator.of(context).pop(),
+          icon: const Icon(Icons.arrow_back, size: 30),
         ),
         actions: [
           IconButton(
             onPressed: () {
-              setState(() {
-                chaneIconColor = !chaneIconColor;
-              });
-            }, 
+              setState(() => _isFavorite = !_isFavorite);
+            },
             icon: Icon(
               Icons.favorite,
               size: 30,
-              color: chaneIconColor ? AppColors.sixthColor : AppColors.thirdColor,
+              color: _isFavorite ? AppColors.sixthColor : AppColors.thirdColor,
             ),
           ),
         ],
@@ -54,12 +55,12 @@ class _Screen4State extends State<Screen4> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Image.asset(
-              AppImages.watch4,
+              AppImages.watch2,
               width: 319,
               height: 319,
               fit: BoxFit.cover,
             ),
-            SizedBox(height: 25),
+            const SizedBox(height: 25),
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -71,52 +72,43 @@ class _Screen4State extends State<Screen4> {
                       color: Colors.black.withOpacity(0.1),
                       blurRadius: 10,
                       spreadRadius: 2,
-                      offset: Offset(0, 5),
+                      offset: const Offset(0, 5),
                     ),
                   ],
                 ),
                 child: Padding(
                   padding: const EdgeInsets.all(15),
                   child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Xiamoi So Pro',
+                          const Text(
+                            'Apple Watch Se NewGen',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 20,
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          Row(
-                            children: [
-                              Container(
-                                width: 50,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.star, 
-                                      color: Colors.yellow,
-                                    ),
-                                    Text('4.2'),
-                                  ],
-                                ),
-                              ),
-                            ],
+                          Container(
+                            width: 50,
+                            height: 40,
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: const Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(Icons.star, color: Colors.yellow),
+                                Text('5.0'),
+                              ],
+                            ),
                           ),
                         ],
                       ),
-
                       Text(
                         '(With solo loop)',
                         style: TextStyle(
@@ -125,8 +117,8 @@ class _Screen4State extends State<Screen4> {
                           fontWeight: FontWeight.w400,
                         ),
                       ),
-                      SizedBox(height: 10),
-                      Text(
+                      const SizedBox(height: 10),
+                      const Text(
                         'Colors',
                         style: TextStyle(
                           color: Colors.black,
@@ -134,36 +126,31 @@ class _Screen4State extends State<Screen4> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            height: 50,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ChoiceChip(
-                                  selectedColor: Colors.pink,
-                                  labelStyle: TextStyle(color: AppColors.black),
-                                  label: Text(
-                                    changeColor[index],
-                                  ),
-                                  selected: _valueColor == index,
-                                  onSelected: (bool selectedColor) {
-                                    setState(() {
-                                    _valueColor = selectedColor ? index : null!;
-                                    });
-                                  },
-                                ),
-                              ),
-                              itemCount: changeColor.length,
+                      SizedBox(
+                        height: 50,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          shrinkWrap: true,
+                          itemCount: changeColor.length,
+                          itemBuilder: (context, index) => Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: ChoiceChip(
+                              selectedColor: AppColors.thirdColor,
+                              labelStyle:
+                                  const TextStyle(color: AppColors.black),
+                              label: Text(changeColor[index]),
+                              selected: _valueColor == index,
+                              onSelected: (bool selected) {
+                                setState(() {
+                                  _valueColor = selected ? index : 0;
+                                });
+                              },
                             ),
                           ),
-                        ],
+                        ),
                       ),
-                      SizedBox(height: 15),
-                      Text(
+                      const SizedBox(height: 15),
+                      const Text(
                         'Details',
                         style: TextStyle(
                           color: Colors.black,
@@ -171,14 +158,15 @@ class _Screen4State extends State<Screen4> {
                           fontWeight: FontWeight.w500,
                         ),
                       ),
-                      Flexible(
+                      const Flexible(
                         child: Text(
-                         "The aluminium case is lightweight and made from 100 percent recycled aerospace grade alloy",
-                         style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                         ),
+                          'The aluminium case is lightweight and made from '
+                          '100 percent recycled aerospace grade alloy',
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 15,
+                            fontWeight: FontWeight.w500,
+                          ),
                         ),
                       ),
                     ],
@@ -186,34 +174,44 @@ class _Screen4State extends State<Screen4> {
                 ),
               ),
             ),
-             SizedBox(
+            const SizedBox(height: 16),
+
+            /// Кнопка "Добавить в корзину"
+            SizedBox(
               height: 55,
               width: double.infinity,
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   backgroundColor: AppColors.firstColor,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
                 ),
-                onPressed: () {}, 
-                child: Row(
+                onPressed: () {
+                  /// Добавляем в наш CartProvider
+                  context.read<CartProvider>().addToCart(_watch);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Apple Watch добавлен в корзину'),
+                      duration: Duration(seconds: 1),
+                      behavior: SnackBarBehavior.floating,
+                    ),
+                  );
+                },
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       'Добавить в корзину',
-                      style: TextStyle(
-                        color: AppColors.white,
-                      ),
+                      style: TextStyle(color: AppColors.white),
                     ),
                     SizedBox(width: 10),
-                    Icon(
-                      Icons.shopping_bag,
-                      size: 22,
-                      color: AppColors.white,
-                    )
+                    Icon(Icons.shopping_bag, size: 22, color: AppColors.white),
                   ],
                 ),
               ),
             ),
-            SizedBox(height: 30),
+            const SizedBox(height: 30),
           ],
         ),
       ),

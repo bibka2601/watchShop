@@ -10,7 +10,7 @@ class WatchesWidget extends StatelessWidget {
     required this.watchModel, 
     required this.watchCompany, 
     required this.price,
-    required this.onPressed,
+    required this.onPressed, required Null Function() onAddToCart, required bool isInCart,
   });
 
   final String image;

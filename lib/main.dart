@@ -1,23 +1,37 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:smart_watches_shop/firebase_options.dart';
+import 'package:smart_watches_shop/models/cart_provider.dart';
 import 'package:smart_watches_shop/pages/entering/sign_in.dart';
-import 'package:smart_watches_shop/provider/shopping_cart_provider.dart';
 
-void main() {
-  runApp(SmartWatchesShop());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => CartProvider()),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
-class SmartWatchesShop extends StatelessWidget {
-  const SmartWatchesShop({super.key});
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => ShoppingCartprovider(),
-      child: MaterialApp(
-        debugShowCheckedModeBanner: false,
-        home: SignIn(),
-      ),
+    return MaterialApp(
+      title: 'Watch Shop',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: 'Raleway'),
+      home: SignIn(),
     );
   }
 }

@@ -7,11 +7,15 @@ environment:
   sdk: ^3.10.1
 
 dependencies:
+  cloud_firestore: ^6.5.0
+  firebase_auth: ^6.5.2
+  firebase_core: ^4.10.0
+  firebase_storage: ^13.4.2
   flutter:
     sdk: flutter
-  cupertino_icons: ^1.0.8
+
   image_picker: ^1.2.2
-  provider: ^6.1.5+1
+  provider: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -32,30 +36,25 @@ flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
   image_path: "assets/logo/logo.png"
-  min_sdk_android: 21 # android min sdk min:16, default 21
+  min_sdk_android: 21
+
   web:
     generate: true
     image_path: "assets/logo/logo.png"
     background_color: "#hexcode"
     theme_color: "#hexcode"
+
   windows:
     generate: true
     image_path: "assets/logo/logo.png"
-    icon_size: 48 # min:48, max:256, default: 48
+    icon_size: 48
+
   macos:
     generate: true
     image_path: "assets/logo/logo.png"
-  # fonts:
-  #   - family: Raleway
-  #     fonts:
-  #       - asset: assets/fonts/static/Raleway-Black.ttf
-  #         # weight: 300
-
-  #       - asset: assets/fonts/static/Raleway-Bold.ttf
 
 flutter_native_splash:
   color: "#121212"
-
   image: assets/images/app_logo.png
 
   android: true

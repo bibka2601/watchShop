@@ -1,182 +1,103 @@
 import 'package:flutter/material.dart';
-import 'package:smart_watches_shop/core/constants/app_colors.dart';
-import 'package:smart_watches_shop/core/constants/app_images.dart';
 
-class WatchesDetailScreen extends StatefulWidget {
-  const WatchesDetailScreen({super.key});
+/// WatchesWidget — карточка товара в сетке.
+/// 
+/// Принимает данные снаружи (через конструктор) и отображает их.
+/// Сам ничего не знает про корзину — просто вызывает onAddToCart
+/// когда нажали кнопку. ЧТО делать — решает MainScreen.
+/// Это называется "разделение ответственности".
 
-  @override
-  State<WatchesDetailScreen> createState() => _WatchesDetailScreenState();
-}
+class WatchesWidget extends StatelessWidget {
+  final String image;
+  final Color containerBgColor;
+  final String watchModel;
+  final String watchCompany;
+  final String price;
+  final bool isInCart;        // уже в корзине?
+  final VoidCallback onPressed;    // открыть детали
+  final VoidCallback onAddToCart;  // добавить в корзину
 
-class _WatchesDetailScreenState extends State<WatchesDetailScreen> {
-  int _valueColor = 0;
-
-  final List<String> changeColor = [
-    'Red',
-    'Black',
-    'White',
-  ];
+  const WatchesWidget({
+    super.key,
+    required this.image,
+    required this.containerBgColor,
+    required this.watchModel,
+    required this.watchCompany,
+    required this.price,
+    required this.isInCart,
+    required this.onPressed,
+    required this.onAddToCart,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () {
-            Navigator.of(context).pop();
-          },
-          icon: Icon(
-            Icons.arrow_back, 
-            size: 30,
-          ),
+    return GestureDetector(
+      onTap: onPressed,
+      child: Container(
+        decoration: BoxDecoration(
+          color: containerBgColor,
+          borderRadius: BorderRadius.circular(20),
         ),
-        actions: [
-          IconButton(
-            onPressed: () {}, 
-            icon: Icon(
-              Icons.favorite, 
-              size: 30,
-            ),
-          ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(25),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Image.asset(
-              AppImages.watch2,
-              width: 319,
-              height: 319,
-              fit: BoxFit.cover,
-            ),
-            SizedBox(height: 25),
+            /// Картинка товара
             Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black.withOpacity(0.1),
-                      blurRadius: 10,
-                      spreadRadius: 2,
-                      offset: Offset(0, 5),
-                    ),
-                  ],
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(15),
-                  child: Column(
-                    // mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Apple Watch Se NewGen',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 20,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                width: 50,
-                                height: 40,
-                                decoration: BoxDecoration(
-                                  color: Colors.white.withOpacity(1),
-                                  borderRadius: BorderRadius.circular(12),
-                                ),
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Icon(
-                                      Icons.star, 
-                                      color: Colors.yellow,
-                                    ),
-                                    Text('5.0'),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
+              child: Center(
+                child: Image.asset(image, fit: BoxFit.contain),
+              ),
+            ),
 
+            Padding(
+              padding: const EdgeInsets.all(12),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    watchModel,
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 14,
+                    ),
+                  ),
+                  Text(
+                    watchCompany,
+                    style: const TextStyle(
+                      fontSize: 12,
+                      color: Colors.black54,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+
+                  /// Цена + кнопка добавления в корзину
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
                       Text(
-                        '(With solo loop)',
-                        style: TextStyle(
-                          color: Colors.grey.shade700,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w400,
+                        price,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
                       ),
-                      SizedBox(height: 10),
-                      Text(
-                        'Colors',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            height: 50,
-                            child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              shrinkWrap: true,
-                              itemBuilder: (context, index) => Padding(
-                                padding: const EdgeInsets.all(8.0),
-                                child: ChoiceChip(
-                                  selectedColor: AppColors.thirdColor,
-                                  labelStyle: TextStyle(color: AppColors.black),
-                                  label: Text(
-                                    changeColor[index],
-                                  ),
-                                  selected: _valueColor == index,
-                                  onSelected: (bool selectedColor) {
-                                    setState(() {
-                                    _valueColor = selectedColor ? index : null!;
-                                    });
-                                  },
-                                ),
-                              ),
-                              itemCount: changeColor.length,
-                            ),
+                      GestureDetector(
+                        onTap: onAddToCart,
+                        child: Container(
+                          padding: const EdgeInsets.all(6),
+                          decoration: BoxDecoration(
+                            color: isInCart ? Colors.green : Colors.black,
+                            shape: BoxShape.circle,
                           ),
-                        ],
-                      ),
-                      SizedBox(height: 15),
-                      Text(
-                        'Details',
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 20,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                      Flexible(
-                        child: Text(
-                         "The aluminium case is lightweight and made from 100 percent recycled aerospace grade alloy",
-                         style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 15,
-                          fontWeight: FontWeight.w500,
-                         ),
+                          child: Icon(
+                            isInCart ? Icons.check : Icons.add,
+                            color: Colors.white,
+                            size: 16,
+                          ),
                         ),
                       ),
                     ],
                   ),
-                ),
+                ],
               ),
             ),
           ],
